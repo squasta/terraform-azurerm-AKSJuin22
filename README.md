@@ -1,8 +1,9 @@
 # Azure Kubernetes Service Cluster deployment with Terraform
       
-=== Still work in progress === version up to date April 2022
+=== Still work in progress, need to adapt this TF Code to some change of AzureRM 3.0 provider === 
+=== version up to date April 2022 ===
 
-= Tested with success with 
+= (not) Tested (yet) with success with 
 Terraform v1.1.8
 on linux_amd64 (WSL2)
 + provider registry.terraform.io/hashicorp/azurerm v3.1.0
