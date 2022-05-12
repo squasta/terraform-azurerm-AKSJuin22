@@ -8,7 +8,7 @@
 #                                                                                                   |_|                                         
 
 terraform {
-  required_version = "= 1.1.8"
+  required_version = "= 1.1.9"
   required_providers {
     azurerm = {
       # The "hashicorp" namespace is the new home for the HashiCorp-maintained
@@ -21,33 +21,38 @@ terraform {
       # more info : https://github.com/terraform-providers/terraform-provider-azurerm
       # Check Changelog : https://github.com/terraform-providers/terraform-provider-azurerm/blob/master/CHANGELOG.md
       source  = "hashicorp/azurerm"
-      version = "= 3.1.0"
+      version = ">= 3.1.0"
     }
 
     # https://github.com/hashicorp/terraform-provider-kubernetes
     kubernetes = {
-      source = "hashicorp/kubernetes"
+      source  = "hashicorp/kubernetes"
       version = "= 2.10.0"
     }
 
     # https://github.com/hashicorp/terraform-provider-helm
     helm = {
-      source = "hashicorp/helm"
+      source  = "hashicorp/helm"
       version = "2.5.0"
     }
-    
+
     # https://github.com/hashicorp/terraform-provider-time
     time = {
-      source = "hashicorp/time"
+      source  = "hashicorp/time"
       version = "0.7.2"
     }
-}
+  }
 }
 
 # Configure the Azure Provider
 provider "azurerm" {
   # whilst the `version` attribute is optional, we recommend pinning to a given version of the Provider
-  features {}
+  # More information on the `features` block https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#features
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
 }
 
 
@@ -59,7 +64,7 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.Terra_aks.kube_config.0.cluster_ca_certificate)
   # cf. https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/guides/alpha-manifest-migration-guide
   experiments {
-      manifest_resource = true
+    manifest_resource = true
   }
 }
 

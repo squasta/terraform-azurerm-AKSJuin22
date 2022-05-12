@@ -6,12 +6,12 @@ variable "LogsWorkspaceName" {
 }
 
 # Variable to choose SKU 
-# Possible values : PerNode, Standard, Standalone
+# Possible values : Free PerGB2018 PerNode Premium Standalone Standard CapacityReservation Unlimited
 # Standalone = Pricing per Gb, PerNode = OMS licence 
 # More info : https://azure.microsoft.com/en-us/pricing/details/log-analytics/
 variable "LogsWorkspaceSKU" {
   type    = string
-  default = "pergb2018"
+  default = "PerGB2018"
 }
 
 # Variable pour definir le nb de jours de rétention du workspaceOMS (Azure Logs Analytics)

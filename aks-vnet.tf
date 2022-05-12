@@ -86,8 +86,6 @@ resource "azurerm_role_assignment" "Terra-aks-aci_subnet" {
 #   principal_id         = azurerm_kubernetes_cluster.Terra_aks.aciConnectorLinux
 # }
 
-
-
 ###################
 # AppGateway Subnet
 

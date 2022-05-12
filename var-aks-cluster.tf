@@ -1,3 +1,10 @@
+#  Resource Group Name
+variable "resource_group" {
+  type    = string
+  default = "RG-AKSCluster"
+}
+
+
 #KeyVault Resource Group and KeyVaultName
 variable "keyvault_rg" {
   type = string
@@ -14,11 +21,6 @@ variable "azure_region" {
   default = "westeurope"
 }
 
-#  Resource Group Name
-variable "resource_group" {
-  type    = string
-  default = "RG-AKSCluster"
-}
 
 #
 # Respect AKS naming rules !!!
@@ -32,10 +34,22 @@ variable "cluster_name" {
 }
 
 #AKS DNS name
+# must contain between 3 and 45 characters, and can contain only letters, numbers, and hyphens.
+# It must start with a letter and must end with a letter or a number.
 variable "dns_name" {
   type    = string
   default = "aksstan1"
 }
+
+
+#(Optional) The upgrade channel for this Kubernetes Cluster. 
+# Possible values are patch, rapid, node-image and stable. Omitting this field sets this value to none
+variable "automatic_channel_upgrade" {
+  type    = string
+  default = "patch"
+}
+
+
 
 # sku of Azure managed K8S control plane
 # Free = no SLA, SLO 99.5, Paid = SLA 99.95 with AS, 99.99 with AZ
