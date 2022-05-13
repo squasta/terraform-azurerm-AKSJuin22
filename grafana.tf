@@ -8,8 +8,10 @@
 # Simple Deployment with Helm
 # Exposed on Internet using Azure Application Gateway Ingress Controller
 # This is just a sample for testing
-  
 
+
+
+# cf. https://github.com/bitnami/charts/tree/master/bitnami/grafana
 resource "helm_release" "Terra-grafana2" {
   name       = "my-grafana-from-bitnami"
   repository = "https://charts.bitnami.com/bitnami"
@@ -52,50 +54,59 @@ resource "helm_release" "Terra-grafana2" {
   }
 
   set {
-    name  = "service.type"
-    value = "LoadBalancer"
+    name = "service.type"
+    #value = "LoadBalancer"
+    value = "NodePort"
   }
 
-  # set {
-  #   name  = "tolerations"
-  #   value = "os=linux:NoSchedule"
-  # }
-
+  set {
+    name  = "tolerations"
+    value = "os=linux:NoSchedule"
+  }
 }
 
-
-resource "kubernetes_ingress" "Terra-Ingress-Grafana" {
+# cf. https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/ingress_v1
+resource "kubernetes_ingress_v1" "Terra-Ingress-Grafana" {
   metadata {
-    name = "ingress-grafana"
+    # https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#metadata
+    name      = "ingress-grafana"
+    namespace = "default"
     annotations = {
       # "kubernetes.io/ingress.class" = "nginx"
-      "kubernetes.io/ingress.class" = "azure/application-gateway"      
+      # pour AGIC : https://azure.github.io/application-gateway-kubernetes-ingress/annotations/
+      # "kubernetes.io/ingress.class" = "azure/application-gateway"
     }
   }
 
   spec {
-    backend {
-      service_name = "my-grafana-from-bitnami"
-      service_port = 3000
+      # to get ingress classes on a Kubernetes cluster : kubectl get ingressclasses 
+      ingress_class_name = "azure-application-gateway"
+      default_backend {
+      service {
+        name = "my-grafana-from-bitnami"
+        port {
+          number = 3000
+        }
+      }
     }
 
     rule {
       http {
         path {
           backend {
-            service_name = "my-grafana-from-bitnami"
-            service_port = 3000
+            service {
+              name = "my-grafana-from-bitnami"
+              port {
+                number = 3000
+              }
+            }
           }
-
           path = "/*"
         }
 
         # path {
         #   backend {
-        #     service_name = "MyApp2"
-        #     service_port = 8080
         #   }
-
         #   path = "/app2/*"
         # }
       }

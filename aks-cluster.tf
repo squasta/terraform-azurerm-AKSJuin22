@@ -35,7 +35,7 @@ resource "azurerm_kubernetes_cluster" "Terra_aks" {
 
   default_node_pool {
     name                   = var.defaultpool-name
-    node_count             = var.defaultpool-nodecount
+    # node_count             = var.defaultpool-nodecount
     vm_size                = var.defaultpool-vmsize
     os_disk_size_gb        = var.defaultpool-osdisksizegb
     max_pods               = var.defaultpool-maxpods
