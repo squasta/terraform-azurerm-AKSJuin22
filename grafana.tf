@@ -9,13 +9,33 @@
 # Exposed on Internet using Azure Application Gateway Ingress Controller
 # This is just a sample for testing
 
+# Grafana admin name
+variable "grafana_admin_username" {
+  type    = string
+  default = "Stan"
+}
+
+
+# cf. https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace_v1
+resource "kubernetes_namespace_v1" "Terra_grafana_namespace" {
+  metadata {
+    annotations = {
+      name = "grafana"
+    }
+    labels = {
+      mylabel = "grafana"
+    }
+    name = "grafana"
+  }
+}
 
 
 # cf. https://github.com/bitnami/charts/tree/master/bitnami/grafana
-resource "helm_release" "Terra-grafana2" {
+resource "helm_release" "Terra_helm_release_grafana" {
   name       = "my-grafana-from-bitnami"
   repository = "https://charts.bitnami.com/bitnami"
   chart      = "grafana"
+  namespace = kubernetes_namespace_v1.Terra_grafana_namespace.metadata[0].name
   #timeout    = 600
 
   set {
@@ -65,12 +85,21 @@ resource "helm_release" "Terra-grafana2" {
   }
 }
 
+# small timer to wait the deployment of grafana pods
+# cf. https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep
+resource "time_sleep" "wait_60_seconds" {
+  depends_on = [azurerm_kubernetes_cluster.Terra_aks, helm_release.Terra_helm_release_grafana ]
+  create_duration = "180s"
+}
+
+
+
 # cf. https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/ingress_v1
 resource "kubernetes_ingress_v1" "Terra-Ingress-Grafana" {
   metadata {
     # https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#metadata
     name      = "ingress-grafana"
-    namespace = "default"
+    namespace = kubernetes_namespace_v1.Terra_grafana_namespace.metadata[0].name
     annotations = {
       # "kubernetes.io/ingress.class" = "nginx"
       # pour AGIC : https://azure.github.io/application-gateway-kubernetes-ingress/annotations/
@@ -91,6 +120,7 @@ resource "kubernetes_ingress_v1" "Terra-Ingress-Grafana" {
     }
 
     rule {
+      host = "demoingress1.standemo.com"
       http {
         path {
           backend {
@@ -104,11 +134,6 @@ resource "kubernetes_ingress_v1" "Terra-Ingress-Grafana" {
           path = "/*"
         }
 
-        # path {
-        #   backend {
-        #   }
-        #   path = "/app2/*"
-        # }
       }
     }
 
@@ -116,4 +141,30 @@ resource "kubernetes_ingress_v1" "Terra-Ingress-Grafana" {
     #   secret_name = "tls-secret"
     # }
   }
+}
+
+
+# cf. https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/data_source
+# cf. https://github.com/grafana/terraform-provider-grafana/issues/63 
+
+resource "grafana_folder" "Terra_grafana_folder" {
+  title      = "My Folder created by Terraform"
+  depends_on = [time_sleep.wait_60_seconds]
+}
+
+
+# cf. https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard
+# Examples: cf. https://grafana.com/grafana/dashboards
+resource "grafana_dashboard" "Terra_grafana_dashboard" {
+  config_json = file("kubernetes-apiserver_rev1.json")
+  folder = grafana_folder.Terra_grafana_folder.id
+  depends_on = [time_sleep.wait_60_seconds]
+}
+
+resource "grafana_data_source" "Terra_grafana_data_source_prometheus" {
+  type = "prometheus"
+  name = "AKS_prometheus"
+  url  = "http://prometheus-server.prometheus.svc.cluster.local/"
+  depends_on = [time_sleep.wait_60_seconds]
+
 }

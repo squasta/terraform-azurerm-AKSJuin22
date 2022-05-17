@@ -32,3 +32,4 @@ resource "azurerm_dns_a_record" "Terra-Ingress-DNS-A-Record" {
   ttl     = 100
   records = ["${data.azurerm_public_ip.Terra-Public-IP-AppGW.ip_address}"]
 }
+

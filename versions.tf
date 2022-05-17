@@ -41,6 +41,11 @@ terraform {
       source  = "hashicorp/time"
       version = "0.7.2"
     }
+
+    grafana = {
+      source  = "grafana/grafana"
+      version = "1.22.0"
+    }
   }
 }
 
@@ -82,3 +87,13 @@ provider "helm" {
 provider "time" {
   # Configuration options
 }
+
+# Configuration provider Grafana
+# cf. https://registry.terraform.io/providers/grafana/grafana/latest/docs
+provider "grafana" {
+  # url  = "http://grafana.example.com/"
+  url  = "http://${var.a-record-dns-ingress}.${var.dns-zone-name-for-ingress}"
+  auth = "${var.grafana_admin_username}:${data.azurerm_key_vault_secret.grafana_admin_password.value}"
+}
+
+
