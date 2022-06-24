@@ -1,9 +1,16 @@
+#            _  __ _____                   _       _     _           
+#      /\   | |/ // ____|                 (_)     | |   | |          
+#     /  \  | ' /| (___   __   ____ _ _ __ _  __ _| |__ | | ___  ___ 
+#    / /\ \ |  <  \___ \  \ \ / / _` | '__| |/ _` | '_ \| |/ _ \/ __|
+#   / ____ \| . \ ____) |  \ V / (_| | |  | | (_| | |_) | |  __/\__ \
+#  /_/    \_\_|\_\_____/    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___||___/
+                                                                   
+
 #  Resource Group Name
 variable "resource_group" {
   type    = string
   default = "RG-AKSCluster"
 }
-
 
 #KeyVault Resource Group and KeyVaultName
 variable "keyvault_rg" {

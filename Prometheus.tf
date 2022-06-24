@@ -1,4 +1,12 @@
 
+#   _____                          _   _                    
+#  |  __ \                        | | | |                   
+#  | |__) | __ ___  _ __ ___   ___| |_| |__   ___ _   _ ___ 
+#  |  ___/ '__/ _ \| '_ ` _ \ / _ \ __| '_ \ / _ \ | | / __|
+#  | |   | | | (_) | | | | | |  __/ |_| | | |  __/ |_| \__ \
+#  |_|   |_|  \___/|_| |_| |_|\___|\__|_| |_|\___|\__,_|___/
+                                                          
+                                                          
 # Prometheus namespace
 # cf. https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace_v1
 resource "kubernetes_namespace_v1" "Terra_prometheus_namespace" {

@@ -1,3 +1,11 @@
+#   _    _           _       _         _____  _   _  _____ 
+#  | |  | |         | |     | |       |  __ \| \ | |/ ____|
+#  | |  | |_ __   __| | __ _| |_ ___  | |  | |  \| | (___  
+#  | |  | | '_ \ / _` |/ _` | __/ _ \ | |  | | . ` |\___ \ 
+#  | |__| | |_) | (_| | (_| | ||  __/ | |__| | |\  |____) |
+#   \____/| .__/ \__,_|\__,_|\__\___| |_____/|_| \_|_____/ 
+#         | |                                              
+#         |_|                                              
 
 # small timer to wait the public IP of Application Gateway (created by AKS AGIC add-on) to be ready
 # cf. https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep
