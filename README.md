@@ -10,6 +10,7 @@ on linux_amd64 (WSL2)
 + provider registry.terraform.io/hashicorp/kubernetes v2.10.0
 + provider registry.terraform.io/hashicorp/random v3.3.2
 + provider registry.terraform.io/providers/hashicorp/time v0.7.2
++ provider https://registry.terraform.io/providers/grafana/grafana/latest/docs v1.22.0
 
 --------------------------------------------------------------------------------------------------------
 
@@ -35,6 +36,8 @@ These Terraform files can be used to deploy the following Azure components :
 On Kubernetes, these Terraform files will :
 
 - Deploy Grafana using Bitnami Helm Chart and exposed Grafana Dashboard using Ingress (and AGIC)
+- Install Prometheus
+- Configure Grafana : user / folder / prometheus datasource / dashboard
 
 __Prerequisites :__
 
